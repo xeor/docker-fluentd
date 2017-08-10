@@ -1,12 +1,15 @@
-FROM fluent/fluentd:v0.14-onbuild
+# Need debian because of the systemd plugin got dependencies on systemd stuff..
+FROM fluent/fluentd:v0.14-debian-onbuild
 
-RUN apk add --update --virtual .build-deps sudo build-base ruby-dev \
+RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev" \
+    && apt-get update \
+    && apt-get install -y --no-install-recommends $buildDeps \
     && sudo gem install \
         fluent-plugin-splunkhec \
         fluent-plugin-kubernetes_metadata_filter \
         fluent-plugin-systemd \
         fluent-plugin-prometheus \
     && sudo gem sources --clear-all \
-    && apk del .build-deps \
-    && rm -rf /var/cache/apk/* /home/fluent/.gem/ruby/2.3.0/cache/*.gem
-
+    && SUDO_FORCE_REMOVE=yes \
+        apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false $buildDeps \
+    && rm -rf /var/lib/apt/lists/* /home/fluent/.gem/ruby/2.3.0/cache/*.gem
