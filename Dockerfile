@@ -5,7 +5,7 @@ RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev" \
     && apt-get update \
     && apt-get install -y --no-install-recommends $buildDeps \
     && sudo gem install \
-        fluent-plugin-splunkhec \
+        fluent-plugin-splunkhec:1.1 \
         fluent-plugin-kubernetes_metadata_filter \
         fluent-plugin-systemd \
         fluent-plugin-prometheus \
