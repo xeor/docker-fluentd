@@ -1,7 +1,7 @@
 # Need debian because of the systemd plugin got dependencies on systemd stuff..
 FROM fluent/fluentd:v0.14-debian-onbuild
 
-RUN id
+ENV FLUENT_UID=0
 
 RUN buildDeps="sudo make gcc g++ libc-dev ruby-dev git" \
     && apt-get update \
